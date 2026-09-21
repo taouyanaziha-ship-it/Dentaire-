@@ -1,0 +1,50 @@
+
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Liste des patients</h1>
+        <p class="page-subtitle">Tous les patients enregistrés dans le cabinet</p>
+    </div>
+
+    <a href="/patients/ajouter/" class="add-btn">Ajouter patient</a>
+</div>
+
+<div class="table-card">
+
+    <table class="patient-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Date naissance</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for p in patients %}
+            <tr>
+                <td>{{ p.nom }}</td>
+                <td>{{ p.prenom }}</td>
+                <td>{{ p.email }}</td>
+                <td>{{ p.telephone }}</td>
+                <td>{{ p.date_naissance }}</td>
+    
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="empty-message">
+                    Aucun patient enregistré.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

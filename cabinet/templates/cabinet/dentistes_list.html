@@ -1,0 +1,90 @@
+ {%extends 'cabinet/base.html'%}
+
+ {%block content%}
+   
+ <div class="page1_header">
+
+    <div>
+        <h1 class="page1_title">Liste des dentistes</h1>
+        <p class="page1_subtitle">Tous les dentistes enregistrés dans le cabinet</p>
+    </div>
+
+    <a href="/dentistes/ajouter/" class="add1_btn">Ajouter dentiste</a>
+
+ </div>
+ 
+ <div class="table_card1">
+
+   <table class="dentiste_table">
+        <thead>
+            <tr>
+             <th>Nom</th>
+             <th>Spécialité</th>
+             <th>Téléphone</th>
+             <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in dentistes %}
+            <tr>
+                <td>{{ d.nom }}</td>
+                <td>{{ d.specialite }}</td>
+                <td>{{ d.telephone }}</td>
+                <td>{{ d.email }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="empty1_message">
+                    Aucun dentiste enregistré.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+   </table>
+
+
+   {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </div>
+

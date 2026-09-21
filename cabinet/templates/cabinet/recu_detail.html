@@ -1,0 +1,26 @@
+{% extends 'cabinet/base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width: 700px;">
+    <div class="card shadow-sm border-0" style="border-radius: 14px; overflow: hidden;">
+        <div class="card-header text-white py-3" style="background-color: #2BB3A3;">
+            <h4 class="mb-0">Reçu N° {{ recu.id|stringformat:"04d" }}</h4>
+        </div>
+        <div class="card-body p-4">
+            <p><strong>Patient :</strong> {{ recu.rendezvous.patient }}</p>
+            <p><strong>Dentiste :</strong> {{ recu.rendezvous.dentiste }}</p>
+            <p><strong>Date RDV :</strong> {{ recu.rendezvous.date }}</p>
+            <p><strong>Motif :</strong> {{ recu.rendezvous.motif }}</p>
+            <hr style="border-color: #2BB3A3;">
+            <p><strong>Mode :</strong> {{ recu.get_mode_paiement_display }}</p>
+            <p><strong>Date paiement :</strong> {{ recu.date_paiement }}</p>
+            <h4 style="color: #2BB3A3;">Montant : {{ recu.montant }} MAD</h4>
+            <div class="d-flex gap-2 mt-4">
+                <a href="{% url 'recu_pdf' recu.pk %}"
+                   class="btn text-white px-4"
+                   style="background-color: #2BB3A3;">Télécharger PDF</a>
+                <a href="/paiements/" class="btn btn-light border px-4">Retour</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

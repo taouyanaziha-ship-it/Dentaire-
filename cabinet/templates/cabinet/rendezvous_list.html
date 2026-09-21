@@ -1,0 +1,52 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Liste des rendez-vous</h1>
+        <p class="page-subtitle">Tous les rendez-vous planifiés dans le cabinet</p>
+    </div>
+    <a href="/rendezvous/ajouter/" class="add-btn">Ajouter rendez-vous</a>
+</div>
+
+<div class="table-card">
+    <table class="patient-table">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Dentiste</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Motif</th>
+                <th>Statut</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rdv in rendezvous %}
+            <tr>
+                <td>{{ rdv.patient }}</td>
+                <td>{{ rdv.dentiste }}</td>
+                <td>{{ rdv.date }}</td>
+                <td>{{ rdv.heure }}</td>
+                <td>{{ rdv.motif }}</td>
+                <td>{{ rdv.statut }}</td>
+                <td>
+                    <a href="{% url 'recu_ajouter' rdv.pk %}"
+                       class="btn btn-sm text-white"
+                       style="background-color: #5af2ce;">+ Reçu
+                    </a>
+
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">Aucun rendez-vous enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

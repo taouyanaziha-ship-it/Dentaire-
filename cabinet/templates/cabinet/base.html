@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Cabinet Dentaire</title>
+
+    <!-- Bootstrap CSS local -->
+    <link rel="stylesheet" href="{% static 'cabinet/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- CSS dyalna -->
+    <link rel="stylesheet" href="{% static 'cabinet/css/style.css' %}?v={% now 'U' %}">
+</head>
+
+<body>
+
+<div class="dasch">
+    <!-- Sidebar f lisar -->
+   <aside class="sidebar">
+
+    <div class="sidebar-title">Cabinet Dentaire</div>
+        
+    <a href="/" class="sidebar-link">Accueil</a>
+    <a href="/patients/" class="sidebar-link">Patients</a>
+    <a href="/dentistes/" class="sidebar-link">Dentistes</a>
+    <a href="/rendezvous/" class="sidebar-link">Rendez-vous</a>
+    <a href="/paiements/" class="sidebar-link">Paiements</a>
+
+    </aside>
+
+    <!-- Contenu f droite -->
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</div>
+
+<!-- Bootstrap JS local -->
+<script src="{% static 'cabinet/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>

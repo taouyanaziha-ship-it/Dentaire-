@@ -1,0 +1,178 @@
+{% extends 'cabinet/base.html' %}
+
+{% block content %}
+
+<div class="dashboard">
+
+    <div class="dashboard-header">
+        <h1 class="page-title">Tableau de bord</h1>
+        <p class="page-subtitle">Bienvenue dans la plateforme de gestion du cabinet dentaire</p>
+    </div>
+
+    {% comment %} RDV + Paiements {% endcomment %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; width: 100%; max-width: 1200px; margin-bottom: 1.2rem;">
+
+        <div class="table-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="font-size: 15px; color: #2BB3A3;">Derniers rendez-vous</h3>
+                <a href="/rendezvous/" style="font-size: 12px; color: #2BB3A3;">Voir tout →</a>
+            </div>
+            {% for rdv in derniers_rdv %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #E8F8F6; color: #1A8A7C; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;">
+                        {{ rdv.patient.nom|first }}{{ rdv.patient.prenom|first }}
+                    </div>
+                    <div>
+                        <p style="font-size: 13px; font-weight: 600; margin: 0;">{{ rdv.patient }}</p>
+                        <p style="font-size: 11px; color: #6b7280; margin: 0;">{{ rdv.dentiste }} — {{ rdv.date }}</p>
+                    </div>
+                </div>
+                <span style="font-size: 10px; padding: 3px 8px; border-radius: 20px; background: #fef9c3; color: #854d0e;">
+                    {{ rdv.statut }}
+                </span>
+            </div>
+            {% empty %}
+            <p style="font-size: 13px; color: #6b7280;">Aucun rendez-vous.</p>
+            {% endfor %}
+        </div>
+
+        <div class="table-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="font-size: 15px; color: #2BB3A3;">Paiements récents</h3>
+                <a href="/paiements/" style="font-size: 12px; color: #2BB3A3;">Voir tout →</a>
+            </div>
+            {% for recu in derniers_paiements %}
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e5e7eb;">
+                <div>
+                    <p style="font-size: 13px; font-weight: 600; margin: 0;">{{ recu.rendezvous.patient }}</p>
+                    <p style="font-size: 11px; color: #6b7280; margin: 0;">{{ recu.date_paiement }}</p>
+                </div>
+                <div style="text-align: right;">
+                    <p style="font-size: 13px; font-weight: 700; color: #1A8A7C; margin: 0;">{{ recu.montant }} MAD</p>
+                    <span style="font-size: 10px; padding: 2px 8px; border-radius: 20px; background: #dcfce7; color: #166534;">Payé</span>
+                </div>
+            </div>
+            {% empty %}
+            <p style="font-size: 13px; color: #6b7280;">Aucun paiement.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    {% comment %} DIAGRAMMES {% endcomment %}
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.2rem; width: 100%; max-width: 1200px; margin-bottom: 1.2rem;">
+
+        {% comment %} Bar chart {% endcomment %}
+        <div class="table-card">
+            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Statistiques globales</h3>
+            {% with total=total_rendezvous|add:total_patients|add:total_dentistes %}
+            <div style="margin-bottom: 8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B; margin-bottom:3px;">
+                    <span>Patients</span><span>{{ total_patients }}</span>
+                </div>
+                <div style="height:8px; background:#E8F8F6; border-radius:4px;">
+                    <div style="height:100%; background:#2BB3A3; border-radius:4px; width: {% widthratio total_patients 10 100 %}%;"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B; margin-bottom:3px;">
+                    <span>Dentistes</span><span>{{ total_dentistes }}</span>
+                </div>
+                <div style="height:8px; background:#E8F8F6; border-radius:4px;">
+                    <div style="height:100%; background:#1A8A7C; border-radius:4px; width: {% widthratio total_dentistes 10 100 %}%;"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B; margin-bottom:3px;">
+                    <span>Rendez-vous</span><span>{{ total_rendezvous }}</span>
+                </div>
+                <div style="height:8px; background:#E8F8F6; border-radius:4px;">
+                    <div style="height:100%; background:#0EA5E9; border-radius:4px; width: {% widthratio total_rendezvous 10 100 %}%;"></div>
+                </div>
+            </div>
+            {% endwith %}
+        </div>
+
+        {% comment %} Pie chart {% endcomment %}
+        <div class="table-card" style="display:flex; flex-direction:column; align-items:center;">
+            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 12px; align-self:flex-start;">Paiements</h3>
+            <svg width="100" height="100" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#E8F8F6" stroke-width="22"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#2BB3A3" stroke-width="22"
+                    stroke-dasharray="{% widthratio rdv_payes.count total_rendezvous 239 %} 239"
+                    stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#dc2626" stroke-width="22"
+                    stroke-dasharray="{% widthratio rdv_impayes.count total_rendezvous 239 %} 239"
+                    stroke-dashoffset="-{% widthratio rdv_payes.count total_rendezvous 239 %}"
+                    transform="rotate(-90 50 50)"/>
+                <text x="50" y="54" text-anchor="middle" font-size="13" font-weight="700" fill="#0F172A">
+                    {% widthratio rdv_payes.count total_rendezvous 100 %}%
+                </text>
+            </svg>
+            <div style="margin-top: 10px; width: 100%;">
+                <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:#64748B; margin-bottom:4px;">
+                    <div style="width:9px; height:9px; border-radius:50%; background:#2BB3A3;"></div>
+                    Payés ({{ rdv_payes.count }}) — {{ total_paye }} MAD
+                </div>
+                <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:#64748B;">
+                    <div style="width:9px; height:9px; border-radius:50%; background:#dc2626;"></div>
+                    Non payés ({{ rdv_impayes.count }})
+                </div>
+            </div>
+        </div>
+
+        {% comment %} Statut RDV {% endcomment %}
+        <div class="table-card">
+            <h3 style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Statut des RDV</h3>
+            <div style="margin-bottom: 8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B; margin-bottom:3px;">
+                    <span>En attente</span><span>{{ rdv_impayes.count }}</span>
+                </div>
+                <div style="height:8px; background:#E8F8F6; border-radius:4px;">
+                    <div style="height:100%; background:#f59e0b; border-radius:4px; width: {% if total_rendezvous %}{% widthratio rdv_impayes.count total_rendezvous 100 %}{% else %}0{% endif %}%;"></div>
+                </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B; margin-bottom:3px;">
+                    <span>Payés</span><span>{{ rdv_payes.count }}</span>
+                </div>
+                <div style="height:8px; background:#E8F8F6; border-radius:4px;">
+                    <div style="height:100%; background:#2BB3A3; border-radius:4px; width: {% if total_rendezvous %}{% widthratio rdv_payes.count total_rendezvous 100 %}{% else %}0{% endif %}%;"></div>
+                </div>
+            </div>
+            <div style="border-top:1px solid #e5e7eb; margin-top:10px; padding-top:10px;">
+                <p style="font-size:11px; color:#64748B;">Total encaissé</p>
+                <p style="font-size:18px; font-weight:700; color:#1A8A7C;">{{ total_paye }} MAD</p>
+            </div>
+        </div>
+
+    </div>
+
+    {% comment %} Admin - bottom right {% endcomment %}
+    <div style="
+        width: 100%;
+        max-width: 1200px;
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: flex-end;
+    ">
+        <a href="/admin/" target="_blank" rel="noopener noreferrer"
+        style="background-color: #0F766E;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;"
+            
+
+        >Ouvrir admin</a>
+    </div>
+
+</div>
+
+{% endblock %}
